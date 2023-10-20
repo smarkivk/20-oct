@@ -1,0 +1,57 @@
+package calculator.demo.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+@RestController
+@RequestMapping("/calculator")
+public class CalculatorController {
+
+    @PostMapping("/sum")
+    public ResponseEntity sum(@RequestBody CalculationRequest request) {
+        try {
+            int num1 = request.getNum1();
+            int num2 = request.getNum2();
+
+            // Check if inputs are valid
+            if (num1 < 0 || num2 < 0) {
+                throw new IllegalArgumentException("Validation failed");
+            }
+
+            // Perform the sum if validation passes
+            int result = num1 + num2;
+
+            // Return the result as a response
+            String responseMessage = "Sum of " + num1 + " and " + num2 + " is: " + result;
+            return ResponseEntity.ok(responseMessage);
+
+        } catch (IllegalArgumentException ex) {
+            // Handle validation failure
+            String errorMessage = "Validation failed. Please provide valid input values.";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        } catch (Exception ex) {
+            // Handle other exceptions
+            String errorMessage = "An error occurred while processing your request.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+        }
+    }
+}
+
+class CalculationRequest {
+    private int num1;
+    private int num2;
+
+    public int getNum1() {
+
+
+        return num1;
+    }
+
+    public int getNum2() {
+        return num2;
+    }
+
+    // Getters and setters for num1 and num2
+}
